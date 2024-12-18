@@ -1,88 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personalized Video Loader</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      text-align: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Video App</title>
 
-    h1 {
-      color: #333;
-    }
-
-    input {
-      padding: 0.5rem;
-      font-size: 1rem;
-      margin-right: 1rem;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    video {
-      margin-top: 2rem;
-      display: none;
-      max-width: 100%;
-    }
-  </style>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <h1>Welcome! Enter Your First Name</h1>
-  <input type="text" id="nameInput" placeholder="Enter your first name" />
-  <button id="loadVideoBtn">Load Video</button>
 
-  <video id="videoPlayer" controls>
-    <source id="videoSource" src="" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div class="container">
+    <h1>Welcome to the Christmas Video App 🎄</h1>
 
-  <script>
-    document.getElementById('loadVideoBtn').addEventListener('click', async () => {
-      const firstName = document.getElementById('nameInput').value;
+    <input type="text" id="nameInput" placeholder="Enter your name..." />
 
-      if (!firstName) {
-        alert('Please enter your first name.');
-        return;
-      }
+    <button id="loadVideoButton">Load My Video</button>
 
-      try {
-        const response = await fetch('/get-video', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName })
-        });
+    <div id="videoContainer"></div>
+  </div>
 
-        const data = await response.json();
+  <!-- Link to external JS -->
+  <script src="/js/main.js"></script>
 
-        if (response.ok) {
-          const videoPlayer = document.getElementById('videoPlayer');
-          const videoSource = document.getElementById('videoSource');
-          videoSource.src = data.videoPath;
-          videoPlayer.style.display = 'block';
-          videoPlayer.load();
-        } else {
-          alert(data.error);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-        alert('An error occurred. Please try again.');
-      }
-    });
-  </script>
 </body>
 </html>
