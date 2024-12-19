@@ -7,19 +7,25 @@ const PORT = process.env.PORT || 3000;
 
 // ** User-Video Mappings **
 const userToVideoMap = {
-  'adrian': 'Christmas-Present-Adrian.mp4',
-  'alf': 'Christmas-Present-Alf.mp4',
-  'dady': 'Christmas-Present-Dady-V2.mp4',
-  'david': 'Christmas-Present-David-V2.mp4',
-  'evelina': 'Christmas-Present-Evelina-V2.mp4',
-  'helena': 'Christmas-Present-Helena.mp4',
-  'henrik': 'Christmas-Present-Henrik.mp4',
-  'josefin': 'Christmas-Present-Josefin.mp4',
-  'kurt': 'Christmas-Present-Kurt.mp4',
-  'leona': 'Christmas-Present-Leona.mp4',
-  'mamma': 'Christmas-Present-Mamma.mp4',
-  'philip': 'Christmas-Present-Philip V2.mp4',
-  'sofia': 'Christmas-Present-Sofia.mp4'
+  'adrian': 'adrian',
+  'alf': 'alf',
+  'dady': 'dady',
+  'david': 'david',
+  'evelina': 'evelina',
+  'helena': 'helena',
+  'henrik': 'henrik',
+  'josefin': 'josefin',
+  'kurt': 'kurt',
+  'leona': 'leona',
+  'mamma': 'mamma',
+  'philip': 'philip',
+  'sofia': 'sofia'
+};
+
+// ** Custom Alias Mapping **
+const aliasToUserMap = {
+  'shane': 'dady',       // Shane -> Dady videos
+  'kathrine': 'mamma'    // Kathrine -> Mamma videos
 };
 
 // ** Serve public and videos directories **
@@ -36,12 +42,20 @@ app.post('/get-video', (req, res) => {
     return res.status(400).json({ error: 'First name is required.' });
   }
 
-  const videoPath = userToVideoMap[firstName.toLowerCase()];
-  if (!videoPath) {
+  const normalizedFirstName = firstName.toLowerCase();
+
+  // Check if the name is an alias
+  const resolvedName = aliasToUserMap[normalizedFirstName] || normalizedFirstName;
+
+  // Get video key (e.g., "dady", "mamma")
+  const videoKey = userToVideoMap[resolvedName];
+
+  if (!videoKey) {
     return res.status(404).json({ error: 'No video found for this user.' });
   }
 
-  res.json({ videoPath: `/videos/${videoPath}` });
+  // Send the base video name for dynamic selection
+  res.json({ videoKey });
 });
 
 // ** Start the server **

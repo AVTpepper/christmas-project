@@ -1,50 +1,97 @@
-/* General Body Styling */
-body {
+/* Reset defaults */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url('/images/tile-bg.png'); 
+    background-image: url('/images/tile-bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-  }
-  
-  /* Centered Content */
-  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
     text-align: center;
-    padding: 50px 20px;
-  }
-  
-  /* Page Header */
-  h1 {
-    color: #ffffff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  }
-  
-  /* Input Box Styling */
-  input[type="text"] {
-    padding: 10px 15px;
-    font-size: 18px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    border: none;
-    outline: none;
-    margin-top: 20px;
-  }
-  
-  /* Button Styling */
-  button {
+    margin-bottom: 10px;
+}
+
+button {
     padding: 10px 20px;
-    font-size: 18px;
+    font-size: 1rem;
     background-color: #ff5555;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  /* Button Hover Effect */
-  button:hover {
+    transition: background 0.3s ease;
+}
+
+button:hover {
     background-color: #ff3333;
-  }
-  
+}
+
+#videoContainer {
+    margin-top: 20px;
+}
+
+video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: #000; /* Black background */
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    input[type="text"],
+    button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    video {
+        max-height: 50vh; /* Limit height for smaller screens */
+    }
+}
