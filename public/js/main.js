@@ -46,21 +46,20 @@ function typeGreeting(name, callback) {
 }
 
 // Display Video or Error Message
+// Display Video or Error Message
 function displayVideoOrMessage(name) {
   fetch('/get-video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName: name.toLowerCase() })
+      body: JSON.stringify({ firstName: name.toLowerCase() }) // Always lowercase
   })
       .then(response => response.json())
       .then(data => {
           const container = document.querySelector('.container');
 
           if (data.error) {
-              // Remove expanded class on error
               container.classList.remove('container-expanded');
               
-              // Show error message
               videoContainer.innerHTML = `
                   <div class="error-message">
                       Sorry, the elves didn't prepare a surprise for <strong>${capitalizeName(name)}</strong> yet! 🎅
@@ -68,13 +67,13 @@ function displayVideoOrMessage(name) {
               `;
               videoContainer.classList.add('show');
           } else {
-              // Apply expanded class only for valid videos
               container.classList.add('container-expanded');
               
-              // Show video
+              // Ensure lowercase for filenames
+              const lowercaseName = name.toLowerCase();
               const videoSrc = isMobileScreen()
-                  ? `/videos/mobil-${name}.mp4`
-                  : `/videos/Christmas-Present-${capitalizeName(name)}.mp4`;
+                  ? `/videos/mobil-${lowercaseName}.mp4`
+                  : `/videos/christmas-present-${lowercaseName}.mp4`;
 
               videoContainer.innerHTML = `
                   <video controls>
@@ -88,7 +87,7 @@ function displayVideoOrMessage(name) {
       .catch(err => {
           console.error('Error:', err);
           const container = document.querySelector('.container');
-          container.classList.remove('container-expanded'); // Ensure fallback state
+          container.classList.remove('container-expanded');
           
           videoContainer.innerHTML = `
               <div class="error-message">
