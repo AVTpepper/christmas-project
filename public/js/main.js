@@ -28,7 +28,7 @@ function typeGreeting(name, callback) {
             greetingSpan.textContent += greetingText[i++];
             setTimeout(typeGreetingText, 75);
         } else {
-            setTimeout(typeNameText, 300);
+            setTimeout(typeNameText, 300); // Delay between lines
         }
     }
 
@@ -37,7 +37,7 @@ function typeGreeting(name, callback) {
             nameSpan.textContent += nameText[j++];
             setTimeout(typeNameText, 75);
         } else if (callback) {
-            setTimeout(callback, 500);
+            setTimeout(callback, 500); // Delay before showing the video
         }
     }
 
@@ -53,17 +53,43 @@ button.addEventListener('click', () => {
         return;
     }
 
-    typeGreeting(firstName, () => {
-        const videoSrc = isMobileScreen()
-            ? `/videos/mobil-${firstName}.mp4`
-            : `/videos/Christmas-Present-${firstName}.mp4`;
+    // Clear the videoContainer and set message
+    videoContainer.innerHTML = '';
 
-        videoContainer.innerHTML = `
-            <video controls>
-                <source src="${videoSrc}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        `;
-        videoContainer.classList.add('show');
+    // Start Typing Animation
+    typeGreeting(firstName, () => {
+        fetch('/get-video', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstName: firstName.toLowerCase() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    videoContainer.innerHTML = `
+                        <div style="text-align: center; font-size: 1.2rem; color: #ff3333; margin-top: 20px;">
+                            Sorry, the Santa’s elves didn’t create a surprise for <strong>${firstName}</strong> yet! 
+                            <img src="/images/santa-icon-no-bg.png" alt="Santa's Elf" style="width: 40px; height: 40px; margin-left: 5px;">
+                        </div>
+                    `;
+                    return;
+                }
+
+                const videoFileName = isMobileScreen()
+                    ? `mobil-${data.videoKey}.mp4`
+                    : `Christmas-Present-${data.videoKey.charAt(0).toUpperCase() + data.videoKey.slice(1)}.mp4`;
+
+                const videoSrc = `/videos/${videoFileName}`;
+
+                // Add video dynamically without autoplay
+                videoContainer.innerHTML = `
+                    <video controls>
+                        <source src="${videoSrc}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+                videoContainer.classList.add('show');
+            })
+            .catch(err => console.error('Error:', err));
     });
 });

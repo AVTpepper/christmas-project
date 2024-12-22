@@ -26,14 +26,32 @@ html {
     background: rgba(255, 255, 255, 0.95);
     padding: 20px;
     border-radius: 16px;
-    max-width: 500px; /* Fixed maximum width */
-    width: 90%;
+    max-width: 500px;
+    width: 90%; /* Consistent width */
+    height: auto; /* Flexible height */
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
     position: relative;
-    overflow: hidden;
+    z-index: 1;
+    overflow: hidden; /* Prevent inner content overflow */
     border: 8px solid;
     border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
     border-image-slice: 1;
+    border-radius: 16px;
+}
+
+/* Decorative Border */
+.container:before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    z-index: -1;
+    border: 8px solid;
+    border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
+    border-image-slice: 1;
+    border-radius: 16px;
 }
 
 /* Title Styling with Typing Animation */
@@ -43,15 +61,21 @@ h1 {
     margin-bottom: 10px;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-    line-height: 1.1;
+    line-height: 1.2; /* Adjust line spacing for stability */
 }
 
-#title .greeting,
-#title .name {
+#title .greeting {
     font-size: 2rem;
     display: block;
-    text-align: center;
-    margin-bottom: 5px;
+    margin: 0 auto; /* Centered */
+}
+
+#title .name {
+    font-size: 2rem;
+    color: #ff3333;
+    margin: 0 auto;
+    display: block;
+    margin-top: 5px; /* Reduced gap between greeting and name */
 }
 
 /* Input Field */
@@ -59,7 +83,7 @@ input[type="text"] {
     width: 100%;
     max-width: 350px;
     padding: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 1rem;
     border: 2px solid transparent;
     border-radius: 8px;
@@ -91,7 +115,7 @@ button {
     cursor: pointer;
     transition: transform 0.2s ease, background 0.3s ease;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 button:hover {
@@ -101,17 +125,15 @@ button:hover {
 
 /* Video Container */
 #videoContainer {
-    margin-top: 10px;
+    margin-top: 20px; /* Space between button and video */
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     border-radius: 16px;
     background: transparent;
-    padding: 0;
-    margin: 0 auto;
     max-width: 100%;
-    max-height: 50vh;
+    max-height: 60vh;
     opacity: 0;
     transition: opacity 1s ease-in-out;
 }
@@ -124,22 +146,23 @@ button:hover {
 video {
     width: 100%;
     height: auto;
-    max-height: 50vh;
+    max-height: 60vh;
     border-radius: 16px;
     object-fit: contain;
     display: block;
     border: none;
 }
 
-/* Responsive Design */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
+        max-width: 90%;
     }
 
     h1 .greeting,
     h1 .name {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
     }
 
     input[type="text"],

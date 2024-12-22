@@ -30,7 +30,7 @@ const aliasToUserMap = {
 
 // ** Serve public and videos directories **
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/videos', express.static(path.join(__dirname, 'videos')));
+app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 
 app.use(express.json());
 
