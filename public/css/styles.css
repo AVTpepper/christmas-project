@@ -8,90 +8,143 @@
 body,
 html {
     height: 100%;
-    margin: 0;
     font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #ffffff, #e8f9fd);
     background-image: url('/images/tile-bg.png');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* Prevent scrolling */
 }
 
+/* Main container */
 .container {
     text-align: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 20px;
-    border-radius: 8px;
-    max-width: 600px;
+    border-radius: 16px;
+    max-width: 500px; /* Fixed maximum width */
     width: 90%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    border: 8px solid;
+    border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
+    border-image-slice: 1;
 }
 
+/* Title Styling with Typing Animation */
 h1 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Great Vibes', cursive;
+    color: #ff3333;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    line-height: 1.1;
 }
 
+#title .greeting,
+#title .name {
+    font-size: 2rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+/* Input Field */
 input[type="text"] {
     width: 100%;
-    max-width: 400px;
-    padding: 10px;
+    max-width: 350px;
+    padding: 12px;
+    margin-bottom: 15px;
     font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    background: #fff8e1;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    background-image: url("/images/santa-icon-no-bg.png");
+    background-size: 3rem;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: all 0.3s ease;
 }
 
+input[type="text"]:focus {
+    border: 2px solid #ff3333;
+    box-shadow: 0px 0px 8px rgba(255, 85, 85, 0.8);
+    background-color: #fff5f5;
+}
+
+/* Button */
 button {
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #ff5555;
+    font-family: 'Gloria Hallelujah', cursive;
+    background: linear-gradient(45deg, #ff6666, #ff4444);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: transform 0.2s ease, background 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
 }
 
 button:hover {
-    background-color: #ff3333;
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #ff4444, #ff6666);
 }
 
+/* Video Container */
 #videoContainer {
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 16px;
+    background: transparent;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 50vh;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
+#videoContainer.show {
+    opacity: 1;
+}
+
+/* Video Styling */
 video {
     width: 100%;
-    max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    background: #000; /* Black background */
+    max-height: 50vh;
+    border-radius: 16px;
+    object-fit: contain;
     display: block;
-    margin: 0 auto;
+    border: none;
 }
 
-/* Responsive Design for Smaller Screens */
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
     }
 
-    h1 {
-        font-size: 1.5rem;
+    h1 .greeting,
+    h1 .name {
+        font-size: 1.6rem;
     }
 
     input[type="text"],
     button {
         font-size: 0.9rem;
         padding: 8px;
-    }
-
-    video {
-        max-height: 50vh; /* Limit height for smaller screens */
     }
 }
