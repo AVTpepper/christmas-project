@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "cp -r videos ./ && cp -r public ./",
     "start": "node server.js",
     "postinstall": "npm rebuild sqlite3"
   },
