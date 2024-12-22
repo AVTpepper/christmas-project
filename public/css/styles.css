@@ -5,9 +5,10 @@
     box-sizing: border-box;
 }
 
+/* Prevent page horizontal scrolling, allow vertical scrolling */
 body,
 html {
-    height: 100%;
+    min-height: 100vh; /* Full viewport height */
     font-family: Arial, sans-serif;
     background: linear-gradient(to bottom, #ffffff, #e8f9fd);
     background-image: url('/images/tile-bg.png');
@@ -17,7 +18,8 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent scrolling */
+    overflow-x: hidden; /* No horizontal scroll */
+    overflow-y: auto; /* Allow vertical scroll */
 }
 
 /* Main container */
@@ -27,55 +29,33 @@ html {
     padding: 20px;
     border-radius: 16px;
     max-width: 500px;
-    width: 90%; /* Consistent width */
-    height: auto; /* Flexible height */
+    width: 90vw; /* Consistent width */
+    height: auto;
+    max-height: 90vh; /* Prevent container from exceeding viewport */
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 1;
-    overflow: hidden; /* Prevent inner content overflow */
-    border: 8px solid;
+    border: 8px solid; /* Decorative border applied directly */
     border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
     border-image-slice: 1;
-    border-radius: 16px;
 }
 
-/* Decorative Border */
-.container:before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    z-index: -1;
-    border: 8px solid;
-    border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
-    border-image-slice: 1;
-    border-radius: 16px;
-}
-
-/* Title Styling with Typing Animation */
+/* Title Styling */
 h1 {
     font-family: 'Great Vibes', cursive;
     color: #ff3333;
     margin-bottom: 10px;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-    line-height: 1.2; /* Adjust line spacing for stability */
+    line-height: 1.2;
 }
 
-#title .greeting {
-    font-size: 2rem;
-    display: block;
-    margin: 0 auto; /* Centered */
-}
-
+#title .greeting,
 #title .name {
     font-size: 2rem;
-    color: #ff3333;
-    margin: 0 auto;
     display: block;
-    margin-top: 5px; /* Reduced gap between greeting and name */
+    margin: 0 auto;
+    margin-top: 5px;
 }
 
 /* Input Field */
@@ -83,7 +63,7 @@ input[type="text"] {
     width: 100%;
     max-width: 350px;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-size: 1rem;
     border: 2px solid transparent;
     border-radius: 8px;
@@ -115,7 +95,7 @@ button {
     cursor: pointer;
     transition: transform 0.2s ease, background 0.3s ease;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 button:hover {
@@ -124,18 +104,21 @@ button:hover {
 }
 
 /* Video Container */
+/* Video Container */
 #videoContainer {
-    margin-top: 20px; /* Space between button and video */
+    margin-top: 10px; /* Space between button and video */
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    align-items: flex-end; /* Align video to the bottom to keep controls visible */
+    overflow: hidden; /* Crop overflowing content */
     border-radius: 16px;
     background: transparent;
     max-width: 100%;
-    max-height: 60vh;
+    height: auto;
+    max-height: 50vh; /* Video container height limit */
     opacity: 0;
     transition: opacity 1s ease-in-out;
+    position: relative;
 }
 
 #videoContainer.show {
@@ -146,23 +129,44 @@ button:hover {
 video {
     width: 100%;
     height: auto;
-    max-height: 60vh;
+    max-width: 100%;
+    max-height: 100%;
     border-radius: 16px;
-    object-fit: contain;
+    object-fit: cover; /* Ensures the video fills the container */
+    object-position: bottom; /* Always display the bottom of the video */
     display: block;
     border: none;
 }
 
-/* Responsive Adjustments */
+/* Error Message Styling */
+.error-message {
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Gloria Hallelujah', cursive;
+    color: #ff3333;
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Prevent content shift during input focus */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
-        max-width: 90%;
-    }
-
-    h1 .greeting,
-    h1 .name {
-        font-size: 1.8rem;
+        max-width: 90vw;
     }
 
     input[type="text"],
@@ -170,4 +174,8 @@ video {
         font-size: 0.9rem;
         padding: 8px;
     }
+    #videoContainer {
+        max-height: 40vh; /* Slightly smaller on mobile for better fitting */
+    }
+    
 }

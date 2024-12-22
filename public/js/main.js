@@ -23,65 +23,52 @@ function typeGreeting(name, callback) {
     const nameText = `${name} 🎄`;
     let i = 0, j = 0;
 
+    // Type "Merry Christmas,"
     function typeGreetingText() {
         if (i < greetingText.length) {
             greetingSpan.textContent += greetingText[i++];
             setTimeout(typeGreetingText, 75);
         } else {
-            setTimeout(typeNameText, 300); // Delay between lines
+            setTimeout(typeNameText, 300); // Small pause before typing name
         }
     }
 
+    // Type "[Name] 🎄"
     function typeNameText() {
         if (j < nameText.length) {
             nameSpan.textContent += nameText[j++];
             setTimeout(typeNameText, 75);
         } else if (callback) {
-            setTimeout(callback, 500); // Delay before showing the video
+            setTimeout(callback, 500); // Callback after typing completes
         }
     }
 
     typeGreetingText();
 }
 
-// Button Event Listener
-button.addEventListener('click', () => {
-    const firstName = capitalizeName(nameInput.value.trim());
+// Display Video or Error Message
+function displayVideoOrMessage(name) {
+    fetch('/get-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName: name.toLowerCase() })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                // Show error message
+                videoContainer.innerHTML = `
+                    <div class="error-message">
+                        Sorry, the elves didn't prepare a surprise for <strong>${capitalizeName(name)}</strong> yet! 🎅
+                    </div>
+                `;
+                videoContainer.classList.add('show');
+            } else {
+                // Show video
+                const videoSrc = isMobileScreen()
+                    ? `/videos/mobil-${name}.mp4`
+                    : `/videos/Christmas-Present-${capitalizeName(name)}.mp4`;
 
-    if (!firstName) {
-        alert('Please enter your name!');
-        return;
-    }
-
-    // Clear the videoContainer and set message
-    videoContainer.innerHTML = '';
-
-    // Start Typing Animation
-    typeGreeting(firstName, () => {
-        fetch('/get-video', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName: firstName.toLowerCase() })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    videoContainer.innerHTML = `
-                        <div style="text-align: center; font-size: 1.2rem; color: #ff3333; margin-top: 20px;">
-                            Sorry, the Santa’s elves didn’t create a surprise for <strong>${firstName}</strong> yet! 
-                            <img src="/images/santa-icon-no-bg.png" alt="Santa's Elf" style="width: 40px; height: 40px; margin-left: 5px;">
-                        </div>
-                    `;
-                    return;
-                }
-
-                const videoFileName = isMobileScreen()
-                    ? `mobil-${data.videoKey}.mp4`
-                    : `Christmas-Present-${data.videoKey.charAt(0).toUpperCase() + data.videoKey.slice(1)}.mp4`;
-
-                const videoSrc = `/videos/${videoFileName}`;
-
-                // Add video dynamically without autoplay
                 videoContainer.innerHTML = `
                     <video controls>
                         <source src="${videoSrc}" type="video/mp4">
@@ -89,7 +76,33 @@ button.addEventListener('click', () => {
                     </video>
                 `;
                 videoContainer.classList.add('show');
-            })
-            .catch(err => console.error('Error:', err));
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            videoContainer.innerHTML = `
+                <div class="error-message">
+                    Oops! Something went wrong. Please try again later. 🛠️
+                </div>
+            `;
+            videoContainer.classList.add('show');
+        });
+}
+
+// Button Event Listener
+button.addEventListener('click', () => {
+    const firstName = nameInput.value.trim();
+
+    if (!firstName) {
+        alert('Please enter your name!');
+        return;
+    }
+
+    const capitalizedFirstName = capitalizeName(firstName);
+
+    // Step 1: Show Typing Animation
+    typeGreeting(capitalizedFirstName, () => {
+        // Step 2: Display Video or Error Message after typing finishes
+        displayVideoOrMessage(capitalizedFirstName);
     });
 });
