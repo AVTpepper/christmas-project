@@ -25,7 +25,12 @@ html {
 /* Main container */
 .container {
     text-align: center;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(
+        135deg,
+        #ffdde1, /* Light Red-Pink */
+        #fdf6e3, /* Soft Cream */
+        #d4edda  /* Light Green */
+    ); /* A festive gradient blending red, cream, and green */
     padding: 20px;
     border-radius: 16px;
     max-width: 500px;
@@ -35,9 +40,14 @@ html {
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 1;
-    border: 8px solid; /* Decorative border applied directly */
+    border: 8px solid;
     border-image-source: linear-gradient(45deg, red, white, green, red, white, green);
     border-image-slice: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space out content evenly */
+    align-items: center;
+    overflow: hidden;
 }
 
 /* Title Styling */
@@ -52,7 +62,7 @@ h1 {
 
 #title .greeting,
 #title .name {
-    font-size: 2rem;
+    font-size: 1.8rem;
     display: block;
     margin: 0 auto;
     margin-top: 5px;
@@ -80,7 +90,7 @@ input[type="text"] {
 input[type="text"]:focus {
     border: 2px solid #ff3333;
     box-shadow: 0px 0px 8px rgba(255, 85, 85, 0.8);
-    background-color: #fff5f5;
+    background-color: #fff8e1;
 }
 
 /* Button */
@@ -104,18 +114,16 @@ button:hover {
 }
 
 /* Video Container */
-/* Video Container */
 #videoContainer {
-    margin-top: 10px; /* Space between button and video */
+    margin-top: auto;
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* Align video to the bottom to keep controls visible */
-    overflow: hidden; /* Crop overflowing content */
+    align-items: flex-start; /* Aligns video content to the top */
+    overflow: hidden;
     border-radius: 16px;
     background: transparent;
     max-width: 100%;
-    height: auto;
-    max-height: 50vh; /* Video container height limit */
+    /* max-height: 50vh; */
     opacity: 0;
     transition: opacity 1s ease-in-out;
     position: relative;
@@ -128,41 +136,42 @@ button:hover {
 /* Video Styling */
 video {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100%;
     max-height: 100%;
     border-radius: 16px;
     object-fit: cover; /* Ensures the video fills the container */
-    object-position: bottom; /* Always display the bottom of the video */
+    object-position: top; /* Aligns the video to crop from the top */
     display: block;
     border: none;
 }
 
-/* Error Message Styling */
-.error-message {
-    text-align: center;
-    font-size: 1rem;
-    font-family: 'Gloria Hallelujah', cursive;
-    color: #ff3333;
-    background: #fff8e1;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 20px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s ease-in-out;
-}
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Expanded Container for Video Display on Mobile */
+.container-expanded {
+    background: linear-gradient(
+        135deg,
+        #fdf6e3, /* Soft Cream */
+        #d4edda, /* Light Green */
+        #ffdde1  /* Light Red-Pink */
+    ); /* Slightly softer gradient for expanded mode */
+    height: 90vh; /* Expand to 90% of the viewport height */
+    max-height: 90vh; /* Ensure it doesn't exceed 90% viewport height */
+    overflow: hidden; /* Prevent scrolling inside the container */
 }
 
-/* Prevent content shift during input focus */
+/* Adjust video container inside the expanded state */
+.container-expanded #videoContainer {
+    flex-grow: 1; /* Take up remaining space */
+    align-items: flex-start; /* Align video at the top */
+    overflow: hidden; /* Prevent video from overflowing */
+}
+
+.container-expanded video {
+    object-fit: cover; /* Ensures video fills the container */
+    object-position: top; /* Crop from the top */
+}
+
+/* Mobile Specific Styling */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
@@ -174,8 +183,8 @@ video {
         font-size: 0.9rem;
         padding: 8px;
     }
+
     #videoContainer {
-        max-height: 40vh; /* Slightly smaller on mobile for better fitting */
+        margin-top: auto; /* Ensure video remains at the bottom */
     }
-    
 }

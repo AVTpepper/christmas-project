@@ -35,6 +35,7 @@ app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 app.use(express.json());
 
 // ** API to get video for a given first name **
+// Ensure filenames are lowercase before serving
 app.post('/get-video', (req, res) => {
   const { firstName } = req.body;
 
@@ -47,6 +48,8 @@ app.post('/get-video', (req, res) => {
   // Check if the name is an alias
   const resolvedName = aliasToUserMap[normalizedFirstName] || normalizedFirstName;
 
+  console.log(`Normalized Name: ${normalizedFirstName}, Resolved Name: ${resolvedName}`);
+
   // Get video key (e.g., "dady", "mamma")
   const videoKey = userToVideoMap[resolvedName];
 
@@ -54,8 +57,8 @@ app.post('/get-video', (req, res) => {
     return res.status(404).json({ error: 'No video found for this user.' });
   }
 
-  // Send the base video name for dynamic selection
-  res.json({ videoKey });
+  // Always return lowercase filenames
+  res.json({ videoKey: videoKey.toLowerCase() });
 });
 
 // ** Start the server **

@@ -2,107 +2,120 @@ const title = document.getElementById('title');
 const button = document.getElementById('loadVideoButton');
 const nameInput = document.getElementById('nameInput');
 const videoContainer = document.getElementById('videoContainer');
+const container = document.querySelector('.container');
 
 // Function to capitalize the first letter of the name
 function capitalizeName(name) {
-    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 
 // Function to check screen size
 function isMobileScreen() {
-    return window.innerWidth <= 768; // Mobile threshold
+  return window.innerWidth <= 768; // Mobile threshold
 }
 
 // Typing Animation
 function typeGreeting(name, callback) {
-    title.innerHTML = '<span class="greeting"></span><span class="name"></span>';
-    const greetingSpan = title.querySelector('.greeting');
-    const nameSpan = title.querySelector('.name');
+  title.innerHTML = '<span class="greeting"></span><span class="name"></span>';
+  const greetingSpan = title.querySelector('.greeting');
+  const nameSpan = title.querySelector('.name');
 
-    const greetingText = 'Merry Christmas,';
-    const nameText = `${name} 🎄`;
-    let i = 0, j = 0;
+  const greetingText = 'Merry Christmas,';
+  const nameText = `${name} 🎄`;
+  let i = 0, j = 0;
 
-    // Type "Merry Christmas,"
-    function typeGreetingText() {
-        if (i < greetingText.length) {
-            greetingSpan.textContent += greetingText[i++];
-            setTimeout(typeGreetingText, 75);
-        } else {
-            setTimeout(typeNameText, 300); // Small pause before typing name
-        }
-    }
+  function typeGreetingText() {
+      if (i < greetingText.length) {
+          greetingSpan.textContent += greetingText[i++];
+          setTimeout(typeGreetingText, 75);
+      } else {
+          setTimeout(typeNameText, 300);
+      }
+  }
 
-    // Type "[Name] 🎄"
-    function typeNameText() {
-        if (j < nameText.length) {
-            nameSpan.textContent += nameText[j++];
-            setTimeout(typeNameText, 75);
-        } else if (callback) {
-            setTimeout(callback, 500); // Callback after typing completes
-        }
-    }
+  function typeNameText() {
+      if (j < nameText.length) {
+          nameSpan.textContent += nameText[j++];
+          setTimeout(typeNameText, 75);
+      } else if (callback) {
+          setTimeout(callback, 500);
+      }
+  }
 
-    typeGreetingText();
+  typeGreetingText();
 }
 
 // Display Video or Error Message
 function displayVideoOrMessage(name) {
-    fetch('/get-video', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName: name.toLowerCase() })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                // Show error message
-                videoContainer.innerHTML = `
-                    <div class="error-message">
-                        Sorry, the elves didn't prepare a surprise for <strong>${capitalizeName(name)}</strong> yet! 🎅
-                    </div>
-                `;
-                videoContainer.classList.add('show');
-            } else {
-                // Show video
-                const videoSrc = isMobileScreen()
-                    ? `/videos/mobil-${name}.mp4`
-                    : `/videos/Christmas-Present-${capitalizeName(name)}.mp4`;
+  fetch('/get-video', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: name.toLowerCase() })
+  })
+      .then(response => response.json())
+      .then(data => {
+          const container = document.querySelector('.container');
 
-                videoContainer.innerHTML = `
-                    <video controls>
-                        <source src="${videoSrc}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                `;
-                videoContainer.classList.add('show');
-            }
-        })
-        .catch(err => {
-            console.error('Error:', err);
-            videoContainer.innerHTML = `
-                <div class="error-message">
-                    Oops! Something went wrong. Please try again later. 🛠️
-                </div>
-            `;
-            videoContainer.classList.add('show');
-        });
+          if (data.error) {
+              // Remove expanded class on error
+              container.classList.remove('container-expanded');
+              
+              // Show error message
+              videoContainer.innerHTML = `
+                  <div class="error-message">
+                      Sorry, the elves didn't prepare a surprise for <strong>${capitalizeName(name)}</strong> yet! 🎅
+                  </div>
+              `;
+              videoContainer.classList.add('show');
+          } else {
+              // Apply expanded class only for valid videos
+              container.classList.add('container-expanded');
+              
+              // Show video
+              const videoSrc = isMobileScreen()
+                  ? `/videos/mobil-${name}.mp4`
+                  : `/videos/Christmas-Present-${capitalizeName(name)}.mp4`;
+
+              videoContainer.innerHTML = `
+                  <video controls>
+                      <source src="${videoSrc}" type="video/mp4">
+                      Your browser does not support the video tag.
+                  </video>
+              `;
+              videoContainer.classList.add('show');
+          }
+      })
+      .catch(err => {
+          console.error('Error:', err);
+          const container = document.querySelector('.container');
+          container.classList.remove('container-expanded'); // Ensure fallback state
+          
+          videoContainer.innerHTML = `
+              <div class="error-message">
+                  Oops! Something went wrong. Please try again later. 🛠️
+              </div>
+          `;
+          videoContainer.classList.add('show');
+      });
 }
 
-// Button Event Listener
+// Load Video with Expanded Container
 button.addEventListener('click', () => {
-    const firstName = nameInput.value.trim();
+  const firstName = nameInput.value.trim();
 
-    if (!firstName) {
-        alert('Please enter your name!');
-        return;
-    }
+  if (!firstName) {
+      alert('Please enter your name!');
+      return;
+  }
 
-    const capitalizedFirstName = capitalizeName(firstName);
+  const capitalizedFirstName = capitalizeName(firstName);
 
-    // Step 1: Show Typing Animation
-    typeGreeting(capitalizedFirstName, () => {
-        // Step 2: Display Video or Error Message after typing finishes
-        displayVideoOrMessage(capitalizedFirstName);
-    });
+  // Typing Animation
+  typeGreeting(capitalizedFirstName, () => {
+      const container = document.querySelector('.container');
+      container.classList.add('container-expanded'); // Apply gradient background for video view
+
+      // Display Video
+      displayVideoOrMessage(capitalizedFirstName);
+  });
 });
